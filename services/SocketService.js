@@ -4,6 +4,8 @@ let socket;
 
 let userList = [];
 
+let messageList = [{username : 'user', message:'test'}];
+
 function getSocket(){
 	return socket;
 }
@@ -12,23 +14,37 @@ function openServiceSocket() {
 	socket.on('connect', () => {
 	  console.log('Connected!');
 	});
-	socket.on('user joined', (data) => {
-	    console.log(data.username + ' joined');
-	    console.log(data);
-	    userList.push(data.username);
-   });
+}
+
+function addChatMessage(data){
+	messageList.push(data);
+}
+
+function sendMessage(username, message){
+	var data = {username: username, message: message};
+	socket.emit('new message', message);
+	addChatMessage(data);
 }
 
 function getUserList(){
 	return userList;
 }
+
+function getMessageList(){
+	console.log(messageList)
+	return messageList;
+}
 function addUserName(username){
 	socket.emit('add user', username);
+	userList.push({username : username, avatarurl: 'https://via.placeholder.com/150'});
 }
 
 export default {
   getSocket,
   openServiceSocket,
   addUserName,
-  getUserList
+  getUserList,
+  getMessageList,
+  sendMessage,
+  addChatMessage
 };

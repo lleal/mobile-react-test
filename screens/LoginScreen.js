@@ -7,18 +7,34 @@ import NavigationService from '../services/NavigationService';
 import SocketService from '../services/SocketService';
 
 export default class LoginScreen extends Component {
+
+	async checkIfLoggedIn (){
+	try {
+	    const value = await AsyncStorage.getItem('username');
+	    if (value !== null) {
+	      // We have data!!
+	      NavigationService.navigate('Dashboard', {username : value});
+	    }
+	  } catch (error) {
+	    // Error retrieving data
+	  }
+
+	}
+
 	constructor(props) {
 	  super(props);
 	  this.state = {username : '', email: "", password: "", validEmail : false, validPassowrd: false};
 	  this._onPressButton = this._onPressButton.bind(this); 
 	}
 
+	
 	_onPressButton() {
 		this.state.validEmail = this.state.email && this.validateEmail(this.state.email)
 		this.state.validPassword = this.state.password && this.state.password.length > 7 && this.validatePassword(this.state.password)
 		if (!SocketService.getUserList().includes(this.state.username) && this.state.username && this.state.validEmail && this.state.validPassword){
 			console.log("Valid");
 			SocketService.addUserName(this.state.username);
+			AsyncStorage.setItem('username', this.state.username);
 			NavigationService.navigate('Dashboard', {username : this.state.username});
 		} else {
 			console.log(this.state.validEmail);
