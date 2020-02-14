@@ -16,7 +16,7 @@ export default class LoginScreen extends Component {
 	_onPressButton() {
 		this.state.validEmail = this.state.email && this.validateEmail(this.state.email)
 		this.state.validPassword = this.state.password && this.state.password.length > 7 && this.validatePassword(this.state.password)
-		if (this.state.username && this.state.validEmail && this.state.validPassword){
+		if (!SocketService.getUserList().includes(this.state.username) && this.state.username && this.state.validEmail && this.state.validPassword){
 			console.log("Valid");
 			SocketService.addUserName(this.state.username);
 			NavigationService.navigate('Dashboard', {username : this.state.username});

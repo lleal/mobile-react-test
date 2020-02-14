@@ -5,36 +5,27 @@ import Constants from 'expo-constants';
 import NavigationService from '../services/NavigationService';
 import SocketService from '../services/SocketService';
 
-const DATA = [
+let DATA = [
   {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    orderTitle: 'Primera Orden',
-    offerTitle: 'Mi Oferta - 1'
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    orderTitle: 'Segunda Orden',
-    offerTitle: 'Mi Oferta - 2'
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    orderTitle: 'Tercera Orden',
-    offerTitle: 'Mi Oferta - 3'
-  },
+    username: '',
+  }
 ];
 
 export default function DashboardScreen() {
   const [selected, setSelected] = React.useState(new Map());
-
+  SocketService.getSocket().on('user joined', (data) => {
+    console.log(data.username + ' joined');
+    console.log(data + ' joined');
+    DATA.push({username : username})
+  });
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
         data={DATA}
         renderItem={({ item }) => (
           <ListItem
-            id={item.id}
-            title={item.offerTitle}
-            subtitle={item.orderTitle}
+            id={item.username}
+            title={item.username}
           />
         )}
         keyExtractor={item => item.id}
